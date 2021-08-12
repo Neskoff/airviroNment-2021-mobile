@@ -30,4 +30,11 @@ extension JSONDecoder {
         }
     }
 }
+extension Encodable {
+    func encode() throws -> [String: Any]? {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(self)
+        return try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+    }
+}
 

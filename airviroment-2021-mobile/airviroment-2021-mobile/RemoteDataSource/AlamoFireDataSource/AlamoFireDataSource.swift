@@ -10,16 +10,15 @@ import Alamofire
 
 
 class AlamoFireDataSource: RemoteDataSource{
-    func getMeasurements(result: @escaping ((Result<Array<Measurement>, Error>) -> Void)) {
-        AF.request(Router.Measurements.getMeasurements, interceptor: nil).response { serverResponse in
+    func getMeasurements(meta:Meta?, result: @escaping ((Result<Response, Error>) -> Void)) {
+        AF.request(Router.Measurements.getMeasurements(meta: meta), interceptor: nil).response { serverResponse in
             switch serverResponse.result {
                    case.success(_):
                        do {
-                        print(serverResponse.data![1...1])
                            let jsonDecoder = JSONDecoder()
                         jsonDecoder.dateDecodingStrategy = .custom(JSONDecoder.dateDecodingStrategy)
                         let responseBody: Response = try jsonDecoder.decode(Response.self, from: serverResponse.data!) as Response
-                        result(.success(responseBody.response))
+                        result(.success(responseBody))
                        } catch let error {
                            result(.failure(error))
                        }

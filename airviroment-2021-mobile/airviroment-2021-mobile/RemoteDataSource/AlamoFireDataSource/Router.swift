@@ -12,12 +12,13 @@ struct Router {
     public static var baseUrl: URL = URL(string: "https://airvironment.live/api")!
     
     enum Measurements: URLRequestConvertible {
-        case getMeasurements
+        case getMeasurements(meta: Meta?)
         case getLatest
         
         var resource: String {
             switch self {
-            case .getMeasurements: return "/measurements"
+            case .getMeasurements:
+            return "measurements"
             case .getLatest:
                 return "/measurements/latest"
             }
@@ -47,7 +48,9 @@ struct Router {
             request.method = method
 
             switch self {
-            case .getMeasurements:
+            case .getMeasurements(meta: let meta):
+                request = try URLEncoding.default.encode(request, with: meta?.encode())
+                
                 break
             case .getLatest:
                 break
